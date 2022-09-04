@@ -26,7 +26,7 @@ class _HomeIOSState extends State<HomeIOS> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text("All Todos"),
+        middle: const Text("All Todos"),
         trailing: Material(
           child: IconButton(
             onPressed: () {
@@ -38,7 +38,7 @@ class _HomeIOSState extends State<HomeIOS> {
                 ),
               );
             },
-            icon: Icon(CupertinoIcons.add),
+            icon: const Icon(CupertinoIcons.add),
           ),
         ),
       ),
@@ -47,20 +47,54 @@ class _HomeIOSState extends State<HomeIOS> {
           child: Material(
             child: ListView(
               children: [
+                // Cupertino Search Text Field
                 CupertinoSearchTextField(
                   controller: _searchTextController,
+                  onChanged: (value) => _runFilter(value),
+                  onTap: () {
+                    isWriting = true;
+                  },
                 ),
                 for (ToDo todo
                     in isWriting ? _foundToDo.reversed : todosList.reversed)
                   ToDoItem(
                     todo: todo,
-                    onToDoChanged: null,
-                    onDeleteItem: null,
+                    onToDoChanged: _handleToDoChange,
+                    onDeleteItem: _deleteToDoItem,
                   ),
               ],
             ),
           )),
     );
+  }
+
+  void _handleToDoChange(ToDo todo) {
+    setState(() {
+      todo.isDone = !todo.isDone;
+    });
+  }
+
+  void _deleteToDoItem(String id) {
+    setState(() {
+      todosList.removeWhere((item) => item.id == id);
+    });
+  }
+
+  void _runFilter(String enteredKeyword) {
+    List<ToDo> results = [];
+    if (enteredKeyword.isEmpty) {
+      results = todosList;
+    } else {
+      results = todosList
+          .where((item) => item.todoText!
+              .toLowerCase()
+              .contains(enteredKeyword.toLowerCase()))
+          .toList();
+    }
+
+    setState(() {
+      _foundToDo = results;
+    });
   }
 
   void _addTodoItem(String todo) {
@@ -103,24 +137,24 @@ class _HomeIOSState extends State<HomeIOS> {
               ]),
               margin: const EdgeInsets.all(10),
               child: CupertinoTextField(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 placeholder: "Type something",
-                placeholderStyle: TextStyle(color: Colors.black45),
-                style: TextStyle(color: Colors.blue),
+                placeholderStyle: const TextStyle(color: Colors.black45),
+                style: const TextStyle(color: Colors.blue),
                 controller: _todoController,
               ),
             ),
             Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height * 0.07,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   color: Colors.green,
                   borderRadius: BorderRadius.all(Radius.circular(10))),
-              margin: EdgeInsets.all(10),
+              margin: const EdgeInsets.all(10),
               child: CupertinoButton(
                 pressedOpacity: 0.5,
                 borderRadius: BorderRadius.circular(10),
-                child: Text(
+                child: const Text(
                   "Save it!",
                   style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
@@ -131,17 +165,6 @@ class _HomeIOSState extends State<HomeIOS> {
                 },
               ),
             )
-            // Container(
-            //   decoration: BoxDecoration(),
-            //   child: CupertinoButton(
-            //     child: Icon(CupertinoIcons.floppy_disk),
-            //     onPressed: () {
-            //       _todoController.text.isEmpty
-            //           ? null
-            //           : _addTodoItem(_todoController.text);
-            //     },
-            //   ),
-            // )
           ],
         )
       ],

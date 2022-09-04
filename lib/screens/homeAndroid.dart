@@ -190,7 +190,7 @@ class _HomeAndroidState extends State<HomeAndroid> {
                   isWriting = true;
                 });
               },
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: "Search me",
               ),
