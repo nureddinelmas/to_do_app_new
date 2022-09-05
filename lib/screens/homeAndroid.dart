@@ -171,7 +171,6 @@ class _HomeAndroidState extends State<HomeAndroid> {
                     setState(() {
                       isWriting = false;
                       _searchTextController.text = "";
-                     
                     });
                   },
                   icon: Icon(Icons.arrow_back_sharp),

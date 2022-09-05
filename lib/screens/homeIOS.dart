@@ -106,6 +106,7 @@ class _HomeIOSState extends State<HomeIOS> {
       );
     });
     _todoController.clear();
+    Navigator.of(context).pop();
   }
 
   Widget showDialogum(BuildContext context) {
